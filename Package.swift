@@ -47,7 +47,6 @@ let package = Package(
             name: "CAudioKit",
             dependencies: ["Stk", "soundpipe", "sporth"],
             exclude: [
-                "AudioKitCore/Modulated Delay/README.md",
                 "AudioKitCore/Sampler/Wavpack/license.txt",
                 "AudioKitCore/Common/README.md",
                 "Nodes/Effects/Distortion/DiodeClipper.soul",
