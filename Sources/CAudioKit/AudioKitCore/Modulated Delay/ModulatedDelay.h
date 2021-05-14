@@ -4,6 +4,8 @@
 #pragma once
 
 #include "ModulatedDelay_Typedefs.h"
+#include "AdjustableDelayLine.h"
+#include "FunctionTable.h"
 
 #import <memory>
 
@@ -31,8 +33,8 @@ protected:
     float modFreqHz, modDepthFraction, dryWetMix;
     ModulatedDelayType effectType;
 
-    struct InternalData;
-    std::unique_ptr<InternalData> data;
+    AudioKitCore::AdjustableDelayLine leftDelayLine, rightDelayLine;
+    AudioKitCore::FunctionTableOscillator modOscillator;
 };
 
 #endif
