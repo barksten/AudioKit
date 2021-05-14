@@ -12,19 +12,10 @@ struct ModulatedDelay::InternalData
     AudioKitCore::FunctionTableOscillator modOscillator;
 };
 
-ModulatedDelay::ModulatedDelay(ModulatedDelayType type)
+ModulatedDelay::ModulatedDelay(ModulatedDelayType type, int channelCount, double sampleRate)
 : modFreqHz(1.0f)
 , modDepthFraction(0.0f)
 , effectType(type), data(new InternalData)
-{
-}
-
-ModulatedDelay::~ModulatedDelay()
-{
-    deinit();
-}
-
-void ModulatedDelay::init(int channelCount, double sampleRate)
 {
     minDelayMs = kChorusMinDelayMs;
     maxDelayMs = kChorusMaxDelayMs;
@@ -48,7 +39,7 @@ void ModulatedDelay::init(int channelCount, double sampleRate)
     data->rightDelayLine.setDelayMs(minDelayMs);
 }
 
-void ModulatedDelay::deinit()
+ModulatedDelay::~ModulatedDelay()
 {
     data->leftDelayLine.deinit();
     data->rightDelayLine.deinit();

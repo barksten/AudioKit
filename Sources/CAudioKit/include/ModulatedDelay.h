@@ -10,11 +10,8 @@
 class ModulatedDelay
 {
 public:
-    ModulatedDelay(ModulatedDelayType type);
+    ModulatedDelay(ModulatedDelayType type, int channelCount, double sampleRate);
     ~ModulatedDelay();
-    
-    void init(int channelCount, double sampleRate);
-    void deinit();
     
     void setModFrequencyHz(float freq);
     float getModFrequencyHz() { return modFreqHz; }

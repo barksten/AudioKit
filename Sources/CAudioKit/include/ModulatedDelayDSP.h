@@ -57,7 +57,8 @@ private:
     ParameterRamper depthRamp;
     ParameterRamper feedbackRamp;
     ParameterRamper dryWetMixRamp;
-    ModulatedDelay delay;
+    std::unique_ptr<ModulatedDelay> delay;
+    ModulatedDelayType type;
 
 public:
     ModulatedDelayDSP(ModulatedDelayType type);

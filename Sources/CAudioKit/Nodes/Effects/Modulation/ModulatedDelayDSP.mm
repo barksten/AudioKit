@@ -37,7 +37,7 @@ const float kFlanger_MinDryWetMix = kFlangerMinDryWetMix;
 const float kFlanger_MaxDryWetMix = kFlangerMaxDryWetMix;
 
 ModulatedDelayDSP::ModulatedDelayDSP(ModulatedDelayType type)
-    : DSPBase(1, true), delay(type)
+    : DSPBase(1, true), type(type)
 {
     parameters[ModulatedDelayParameterFrequency] = &frequencyRamp;
     parameters[ModulatedDelayParameterDepth] = &depthRamp;
@@ -48,13 +48,13 @@ ModulatedDelayDSP::ModulatedDelayDSP(ModulatedDelayType type)
 void ModulatedDelayDSP::init(int channels, double sampleRate)
 {
     DSPBase::init(channels, sampleRate);
-    delay.init(channels, sampleRate);
+    delay = std::unique_ptr<ModulatedDelay>(new ModulatedDelay(type, channels, sampleRate));
 }
 
 void ModulatedDelayDSP::deinit()
 {
     DSPBase::deinit();
-    delay.deinit();
+    delay = nullptr;
 }
 
 #define CHUNKSIZE 8     // defines ramp interval
@@ -89,15 +89,15 @@ void ModulatedDelayDSP::process(AUAudioFrameCount frameCount, AUAudioFrameCount 
         dryWetMixRamp.stepBy(chunkSize);
 
         // apply changes
-        delay.setModFrequencyHz(frequencyRamp.get());
-        delay.setModDepthFraction(depthRamp.get());
+        delay->setModFrequencyHz(frequencyRamp.get());
+        delay->setModDepthFraction(depthRamp.get());
         float fb = feedbackRamp.get();
-        delay.setLeftFeedback(fb);
-        delay.setRightFeedback(fb);
-        delay.setDryWetMix(dryWetMixRamp.get());
+        delay->setLeftFeedback(fb);
+        delay->setRightFeedback(fb);
+        delay->setDryWetMix(dryWetMixRamp.get());
 
         // process
-        delay.Render(channelCount, chunkSize, inBuffers, outBuffers);
+        delay->Render(channelCount, chunkSize, inBuffers, outBuffers);
 
         // advance pointers
         inBuffers[0] += chunkSize;
